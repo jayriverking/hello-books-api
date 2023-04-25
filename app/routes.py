@@ -1,8 +1,20 @@
 from app import db
 from app.models.book import Book
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response, abort
 
 books_bp = Blueprint("books", __name__, url_prefix="/books")
+
+# helper function
+def validate_book(book_id):
+    try:
+        book_id = int(book_id)
+    except:
+        abort(make_response({"message": f"Book id must be integer. {type(book_id)} not supported."}, 400))
+    
+    book = Book.query.get(book_id)
+    if not book:
+        abort(make_response({"message": f"Book {book_id} not found."}, 404))
+    return book
 
 @books_bp.route("", methods=["POST"])
 def create_books():
@@ -29,7 +41,14 @@ def get_all_books():
     return jsonify(books_response)
 
     
-
+@books_bp.route("/<book_id>", methods=["GET"])
+def get_one_book(book_id):
+    book = validate_book(book_id)
+    return {
+        "id": book.id,
+        "title": book.title,
+        "description": book.description
+    }
 
 # class Book:
 #     def __init__(self, id, title, description):
@@ -57,4 +76,4 @@ def get_all_books():
 #                 }
 #     except ValueError:
 #         return {"message": f"Book {book_id} is invalid"}, 400
-    return {"message": f"Book {book_id} does not exist"}, 404
+    # return {"message": f"Book {book_id} does not exist"}, 404
