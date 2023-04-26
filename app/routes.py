@@ -16,6 +16,15 @@ def validate_book(book_id):
         abort(make_response({"message": f"Book {book_id} not found."}, 404))
     return book
 
+# def validate_error(request_body):
+#     if not request_body["title"] or not request_body["description"]:
+#         abort(make_response(({"message": "Missing title or description to update."}, 400)))
+    
+
+
+
+
+
 @books_bp.route("", methods=["POST"])
 def create_books():
 
@@ -30,7 +39,14 @@ def create_books():
 
 @books_bp.route("", methods=["GET"])
 def get_all_books():
-    books = Book.query.all()
+    title_query = request.args.get("title")
+
+    if title_query:
+        books = Book.query.filter_by(title=title_query)
+    else:
+        books = Book.query.all()
+        # Book.query.limit(100).all() -- limits query to 100
+
     books_response = []
     for book in books:
         books_response.append({
@@ -49,6 +65,33 @@ def get_one_book(book_id):
         "title": book.title,
         "description": book.description
     }
+
+@books_bp.route("/<book_id>", methods=["PUT"])
+def update_book(book_id):
+    book = validate_book(book_id)
+
+    request_body = request.get_json()
+    # validate_error(request_body)
+
+    book.title = request_body["title"]
+    book.description = request_body["description"]
+
+    db.session.commit()
+
+    return make_response({"message": f"Book {book_id} successfully updated."}, 200)
+
+
+@books_bp.route("/<book_id>", methods=["DELETE"])
+def delete_book(book_id):
+    book = validate_book(book_id)
+
+    db.session.delete(book)
+    db.session.commit()
+
+    return make_response(f"Book {book_id} successfully deleted.")
+
+    
+
 
 # class Book:
 #     def __init__(self, id, title, description):
