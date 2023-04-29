@@ -11,11 +11,11 @@ def validate_book(book_id):
     try:
         book_id = int(book_id)
     except:
-        abort(make_response({"message": f"Book id must be integer. {type(book_id)} not supported."}, 400))
+        abort(make_response({"message": f"Book {book_id} invalid"}, 400))
     
     book = Book.query.get(book_id)
     if not book:
-        abort(make_response({"message": f"Book {book_id} not found."}, 404))
+        abort(make_response({"message": f"Book {book_id} not found"}, 404))
     return book
 
 # def validate_error(request_body):
