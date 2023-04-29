@@ -20,3 +20,13 @@ def test_get_one_book(client, two_saved_books):
         "title": "Ocean Book",
         "description": "watr 4evr"
     }
+
+def test_create_one_book(client):
+    response = client.post("/books", json={
+        "title": "New Book",
+        "description": "The Best!"
+    })
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body == "Book New Book successfully created"
