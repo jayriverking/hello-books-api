@@ -2,7 +2,9 @@ from app import db
 from app.models.book import Book
 from flask import Blueprint, jsonify, request, make_response, abort
 
+
 books_bp = Blueprint("books", __name__, url_prefix="/books")
+
 
 # helper function
 def validate_book(book_id):
@@ -20,10 +22,6 @@ def validate_book(book_id):
 #     if not request_body["title"] or not request_body["description"]:
 #         abort(make_response(({"message": "Missing title or description to update."}, 400)))
     
-
-
-
-
 
 @books_bp.route("", methods=["POST"])
 def create_books():
@@ -91,6 +89,12 @@ def delete_book(book_id):
     return make_response(f"Book {book_id} successfully deleted.")
 
     
+
+
+
+
+
+
 
 
 # class Book:
