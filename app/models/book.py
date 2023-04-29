@@ -5,3 +5,9 @@ class Book(db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     
+    def to_dict(self):
+        dict = {}
+        dict["id"] = self.id
+        dict["title"] = self.title
+        dict["description"] = self.description
+        return dict
