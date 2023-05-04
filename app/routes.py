@@ -7,16 +7,29 @@ books_bp = Blueprint("books", __name__, url_prefix="/books")
 
 
 # helper function
-def validate_book(book_id):
+# def validate_book(cls, book_id):
+#     try:
+#         book_id = int(book_id)
+#     except:
+#         abort(make_response({"message":f"{cls.__name__} {book_id} invalid"}, 400))
+
+#     book = Book.query.get(book_id)
+
+#     if not book:
+#         abort(make_response({"message":f"{cls.__name__} {book_id} not found"}, 404))
+
+#     return book
+
+def validate_model(cls, model_id):
     try:
-        book_id = int(book_id)
+        model_id = int(model_id)
     except:
-        abort(make_response({"message": f"Book {book_id} invalid"}, 400))
-    
-    book = Book.query.get(book_id)
-    if not book:
-        abort(make_response({"message": f"Book {book_id} not found"}, 404))
-    return book
+        abort(make_response({"message": f"{cls.__name__} {model_id} invalid"}, 400))
+    model = cls.query.get(model_id)
+    if not model:
+        abort(make_response({"message": f"{cls.__name__} {model_id} not found"}, 404))
+    return model
+
 
 # def validate_error(request_body):
 #     if not request_body["title"] or not request_body["description"]:
@@ -50,12 +63,12 @@ def get_all_books():
     
 @books_bp.route("/<book_id>", methods=["GET"])
 def get_one_book(book_id):
-    book = validate_book(book_id)
+    book = validate_model(Book, book_id)
     return book.to_dict()
 
 @books_bp.route("/<book_id>", methods=["PUT"])
 def update_book(book_id):
-    book = validate_book(book_id)
+    book = validate_model(Book, book_id)
 
     request_body = request.get_json()
     # validate_error(request_body)
@@ -65,17 +78,17 @@ def update_book(book_id):
 
     db.session.commit()
 
-    return make_response(jsonify({"message": f"Book {book_id} successfully updated."}), 200)
+    return make_response(jsonify(f"Book #{book_id} successfully updated"))
 
 
 @books_bp.route("/<book_id>", methods=["DELETE"])
 def delete_book(book_id):
-    book = validate_book(book_id)
+    book = validate_model(Book, book_id)
 
     db.session.delete(book)
     db.session.commit()
 
-    return make_response(jsonify(f"Book {book_id} successfully deleted."))
+    return make_response(jsonify(f"Book #{book_id} successfully deleted"))
 
     
 
