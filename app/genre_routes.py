@@ -17,7 +17,7 @@ def get_all_genre():
         })
     return jsonify(genres_response)
 
-@ genre_bp.route("", methods=["POST"])
+@genre_bp.route("", methods=["POST"])
 def make_a_genre():
     response_body = request.get_json()
     new_genre = Genre(name=response_body["name"])
