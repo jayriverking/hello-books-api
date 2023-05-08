@@ -28,9 +28,13 @@ def create_app(test_config=None):
 
     from app.models.book import Book
     from app.models.author import Author
+    from app.models.genre import Genre
 
     from .book_routes import books_bp
     app.register_blueprint(books_bp)
+
+    from .genre_routes import genre_bp
+    app.register_blueprint(genre_bp)
 
     from .author_routes import authors_bp
     app.register_blueprint(authors_bp)
