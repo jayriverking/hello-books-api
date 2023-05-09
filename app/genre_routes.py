@@ -52,7 +52,7 @@ def create_book(genre_id):
 
 #     return jsonify(genre_response)
 
-@genres_bp.route("/<genre_id>/books", methods=["GET"])
+@genre_bp.route("/<genre_id>/books", methods=["GET"])
 def read_all_books(genre_id):
     
     genre = validate_model(Genre, genre_id)
