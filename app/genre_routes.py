@@ -1,6 +1,6 @@
 from app import db
 from app.models.genre import Genre
-from app.models.book import BookGenre
+from app.models.book import BookGenre, Book
 from .book_routes import validate_model
 from flask import Blueprint, abort, make_response, jsonify, request
 
