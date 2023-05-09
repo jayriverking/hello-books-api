@@ -1,5 +1,6 @@
 from app import db
 from app.models.genre import Genre
+from app.models.book import BookGenre
 from .book_routes import validate_model
 from flask import Blueprint, abort, make_response, jsonify, request
 
@@ -24,3 +25,29 @@ def make_a_genre():
     db.session.add(new_genre)
     db.session.commit()
     return make_response(jsonify(f"Genre {new_genre.name} successfully created"), 201)
+
+@genre_bp.route("/<genre_id>/books", methods=["POST"])
+def create_book(genre_id):
+    genre = validate_model(Genre, genre_id)
+    request_body = request.get_json()
+    new_book = Book(
+        title=request_body["title"],
+        description=request_body["description"],
+        author_id=request_body["author_id"],
+        genres=[genre]
+    )
+    db.session.add(new_book)
+    db.session.commit()
+    return make_response(jsonify(f"Book {new_book.title} by {new_book.author.name} successfully created"), 201)
+
+
+@genre_bp.route("/<genre_id>/books", methods=["GET"])
+def get_all_books(genre_id):
+    genre = validate_model(Genre, genre_id)
+    genre_response = []
+    for book in genre:
+        genre_response.append({
+            book.to_dict()
+        })
+
+    return jsonify(genre_response)
