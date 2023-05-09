@@ -14,14 +14,14 @@ class Book(db.Model):
         "title": self.title,
         "description": self.description
     }
-    if self.author:
+        if self.author:
         book_dict["author"] = self.author.name
 
-    if self.genres:
+        if self.genres:
         genre_names = [genre.name for genre in self.genres]
         book_dict["genres"] = genre_names
-
-    return book_dict
+        
+        return book_dict
 
     @classmethod
     def from_dict(cls, book_data):
